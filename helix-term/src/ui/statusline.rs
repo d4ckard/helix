@@ -496,15 +496,18 @@ fn render_total_word_count<F>(context: &mut RenderContext, write: F)
 where
     F: Fn(&mut RenderContext, String, Option<Style>) + Copy,
 {
-    let allowed_exts: &[&std::ffi::OsStr] = &[std::ffi::OsStr::new("md")];
+    let allowed_exts = &context.editor.config().word_count_file_exts;
+
     let file_ext = context
         .doc
         .path()
         .map(|p| p.extension())
         .flatten()
+        .map(|ext| ext.to_str())
+        .flatten()
         .unwrap_or_default();
 
-    if allowed_exts.contains(&file_ext) {
+    if allowed_exts.iter().find(|&s| s == file_ext).is_some() {
         let total_word_count = {
             let mut in_word = false;
             context.doc.text().lines().fold(0, |total_words, line| {

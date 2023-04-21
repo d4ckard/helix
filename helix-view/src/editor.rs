@@ -481,6 +481,9 @@ pub enum StatusLineElement {
 
     /// Current version control information
     VersionControl,
+
+    /// The total number of words in the current file
+    TotalWordCount,
 }
 
 // Cursor shape is read and used on every rendered frame and so needs

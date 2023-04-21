@@ -160,6 +160,7 @@ where
         helix_view::editor::StatusLineElement::Separator => render_separator,
         helix_view::editor::StatusLineElement::Spacer => render_spacer,
         helix_view::editor::StatusLineElement::VersionControl => render_version_control,
+        helix_view::editor::StatusLineElement::TotalWordCount => render_total_word_count,
     }
 }
 
@@ -489,4 +490,39 @@ where
         .to_string();
 
     write(context, head, None);
+}
+
+fn render_total_word_count<F>(context: &mut RenderContext, write: F)
+where
+    F: Fn(&mut RenderContext, String, Option<Style>) + Copy,
+{
+    let allowed_exts: &[&std::ffi::OsStr] = &[std::ffi::OsStr::new("md")];
+    let file_ext = context
+        .doc
+        .path()
+        .map(|p| p.extension())
+        .flatten()
+        .unwrap_or_default();
+
+    if allowed_exts.contains(&file_ext) {
+        let total_word_count = {
+            let mut in_word = false;
+            context.doc.text().lines().fold(0, |total_words, line| {
+                total_words
+                    + line.chars().fold(0, |line_words, ch| match ch {
+                        ch if in_word && ch.is_whitespace() => {
+                            in_word = false;
+                            line_words + 1
+                        }
+                        ch if ch.is_alphabetic() => {
+                            in_word = true;
+                            line_words
+                        }
+                        _ => line_words,
+                    })
+            })
+        };
+
+        write(context, format!(" {} ", total_word_count), None);
+    }
 }

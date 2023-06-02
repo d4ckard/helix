@@ -8,6 +8,7 @@
   - [Fedora/RHEL](#fedorarhel)
   - [Arch Linux community](#arch-linux-community)
   - [NixOS](#nixos)
+  - [Flatpak](#flatpak)
   - [AppImage](#appimage)
 - [macOS](#macos)
   - [Homebrew Core](#homebrew-core)
@@ -18,6 +19,9 @@
   - [MSYS2](#msys2)
 - [Building from source](#building-from-source)
   - [Configuring Helix's runtime files](#configuring-helixs-runtime-files)
+    - [Linux and macOS](#linux-and-macos)
+    - [Windows](#windows)
+    - [Multiple runtime directories](#multiple-runtime-directories)
   - [Validating the installation](#validating-the-installation)
   - [Configure the desktop shortcut](#configure-the-desktop-shortcut)
 <!--toc:end-->
@@ -78,7 +82,10 @@ in the AUR, which builds the master branch.
 
 ### NixOS
 
-Helix is available as a [flake](https://nixos.wiki/wiki/Flakes) in the project
+Helix is available in [nixpkgs](https://github.com/nixos/nixpkgs) through the `helix` attribute,
+the unstable channel usually carries the latest release.
+
+Helix is also available as a [flake](https://nixos.wiki/wiki/Flakes) in the project
 root. Use `nix develop` to spin up a reproducible development shell. Outputs are
 cached for each push to master using [Cachix](https://www.cachix.org/). The
 flake is configured to automatically make use of this cache assuming the user
@@ -87,6 +94,15 @@ accepts the new settings on first use.
 If you are using a version of Nix without flakes enabled,
 [install Cachix CLI](https://docs.cachix.org/installation) and use
 `cachix use helix` to configure Nix to use cached outputs when possible.
+
+### Flatpak
+
+Helix is available on [Flathub](https://flathub.org/en-GB/apps/com.helix_editor.Helix):
+
+```sh
+flatpak install flathub com.helix_editor.Helix
+flatpak run com.helix_editor.Helix
+```
 
 ### AppImage
 
